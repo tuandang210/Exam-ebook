@@ -1,7 +1,8 @@
-package cmcglobal.ebook.model;
+package cmcglobal.ebook.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -10,7 +11,10 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private String name;
+    @NotNull
+    @Column(unique = true, name = "isbncode")
     private String iSBNCode;
     private Long price;
     private Long quantity;
@@ -22,7 +26,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> author;
     @ManyToOne
-    @JoinColumn(name = "provider_id", nullable=false)
+    @JoinColumn(name = "provider_id")
     private Provider provider;
 
     @OneToMany(mappedBy = "books",fetch = FetchType.EAGER)

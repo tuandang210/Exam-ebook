@@ -1,4 +1,4 @@
-package cmcglobal.ebook.model;
+package cmcglobal.ebook.entity;
 
 import javax.persistence.*;
 
@@ -8,8 +8,8 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable=false)
     private Customer customer;

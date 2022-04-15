@@ -1,4 +1,4 @@
-package cmcglobal.ebook.model;
+package cmcglobal.ebook.entity;
 
 import javax.persistence.*;
 import java.util.Set;
