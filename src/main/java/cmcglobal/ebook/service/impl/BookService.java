@@ -31,7 +31,10 @@ public class BookService implements IBookService {
         String isbn = newBook.getiSBNCode();
         Book checkBook = bookRepository.findByISBNCode(isbn);
         if(checkBook != null){
-            updateBook(book);
+            checkBook.setName(book.getName());
+            checkBook.setPrice(book.getPrice());
+            checkBook.setQuantity(book.getQuantity() + checkBook.getQuantity());
+            return bookRepository.save(checkBook);
         }
         return bookRepository.save(newBook);
     }
@@ -63,7 +66,7 @@ public class BookService implements IBookService {
         }else {
             checkBook.setName(book.getName());
             checkBook.setPrice(book.getPrice());
-            checkBook.setQuantity(book.getQuantity() + book.getQuantity());
+            checkBook.setQuantity(book.getQuantity() + checkBook.getQuantity());
             return bookRepository.save(checkBook);
         }
     }
