@@ -32,6 +32,18 @@ public class BookService implements IBookService {
         if (book.getAuthor().isEmpty()){
             throw new ExceptionHandle("Author cannot be empty", "114");
         }
+        if (book.getQuantity() == null){
+            throw new ExceptionHandle("Quantity cannot be null", "115");
+        }
+        if (book.getiSBNCode() == null ){
+            throw new ExceptionHandle("ISBN code cannot be null", "116" );
+        }
+        if (book.getiSBNCode().isEmpty() ){
+            throw new ExceptionHandle("ISBN code cannot be empty", "117" );
+        }
+        if (book.getProvider() == null ){
+            throw new ExceptionHandle("Provider cannot be null", "118" );
+        }
 
         return bookRepository.save(book);
     }
