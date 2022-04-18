@@ -11,6 +11,10 @@ public class Provider {
 
     private Long id;
     private String name;
+
+    private Boolean status = true;
+
+
     @OneToMany(mappedBy = "provider")
     private Set<Book> books;
 
@@ -50,5 +54,13 @@ public class Provider {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus() {
+        this.status = !this.status;
     }
 }
