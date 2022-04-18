@@ -1,9 +1,9 @@
-package cmcglobal.ebook.controller.api;
+package cmcglobal.ebook.controller;
 
 import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.entity.Book;
-import cmcglobal.ebook.service.IServiceBook;
+import cmcglobal.ebook.service.IBookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/book")
-public class ControllerBook {
-    private static final Logger log = LoggerFactory.getLogger(ControllerBook.class);
+public class BookController {
+    private static final Logger log = LoggerFactory.getLogger(BookController.class);
     @Autowired
-    private IServiceBook serviceBook;
+    private IBookService serviceBook;
 
 
     @PostMapping("/create-book")
@@ -28,7 +28,7 @@ public class ControllerBook {
             Book bookResult = serviceBook.saveBook(book);
             responseData.setData(bookResult);
             responseData.setStatus("SUCCESS");
-            responseData.setCode("");
+            responseData.setCode("200");
         } catch (ExceptionHandle e) {
             log.error(e.getMessage());
             e.printStackTrace();

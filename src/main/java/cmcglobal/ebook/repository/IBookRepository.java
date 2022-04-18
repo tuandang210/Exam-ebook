@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IRepositoryBook extends JpaRepository<Book,Long> {
+public interface IBookRepository extends JpaRepository<Book,Long> {
     @Query(value = "select * from book b where b.isbncode = :iSBNCode", nativeQuery = true)
     Book findByISBNCode(@Param("iSBNCode") String iSBNCode);
 }

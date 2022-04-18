@@ -14,7 +14,7 @@ public class Book {
     @NotNull
     private String name;
     @NotNull
-    @Column(unique = true, name = "isbncode")
+    @Column(unique = true, name = "isbn_code")
     private String iSBNCode;
     private Long price;
     private Long quantity;
