@@ -1,16 +1,18 @@
 package cmcglobal.ebook.service;
 
+
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.entity.Book;
+import cmcglobal.ebook.model.request.BookRequest;
+
 
 import java.util.List;
 
 public interface IBookService {
-     Book saveBook(Book book) throws ExceptionHandle;
-     void deleteBook(Long id);
+     Book saveBook(BookRequest book) throws ExceptionHandle;
+     Book deleteBook(BookRequest bookRequest) throws ExceptionHandle;
      List<Book> getAll();
-     Book updateBook (Book book);
+     Book updateBook (BookRequest book) throws ExceptionHandle;
      Book getBookById (Long id);
      Book findBookByISBNCode(String isbnCode);
-
 }

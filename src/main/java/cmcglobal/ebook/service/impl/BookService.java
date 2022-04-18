@@ -1,7 +1,10 @@
 package cmcglobal.ebook.service.impl;
 
+
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.entity.Book;
+import cmcglobal.ebook.exception.ExceptionResponse;
+import cmcglobal.ebook.model.request.BookRequest;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,29 +19,33 @@ public class BookService implements IBookService {
 
 
     @Override
-    public Book saveBook(Book book) throws ExceptionHandle {
-        if (book.getName() == null ){
-            throw new ExceptionHandle("Name cannot be null", "000" );
+    public Book saveBook(BookRequest book) throws ExceptionHandle {
+        ExceptionResponse.checkException(book);
+        Book newBook = new Book();
+        newBook.setName(book.getName());
+        newBook.setiSBNCode(book.getiSBNCode());
+        newBook.setPrice(book.getPrice());
+        newBook.setQuantity(book.getQuantity());
+//        newBook.setAuthor(book.getAuthor());
+//        newBook.setProvider(book.getProvider());
+        String isbn = newBook.getiSBNCode();
+        Book checkBook = bookRepository.findByISBNCode(isbn);
+        if(checkBook != null){
+            updateBook(book);
         }
-        if (book.getName().isEmpty() ){
-            throw new ExceptionHandle("Name cannot be empty", "111" );
-        }
-        if (book.getPrice() == null){
-            throw new ExceptionHandle("Price cannot be null", "112");
-        }
-        if (book.getAuthor() == null){
-            throw new ExceptionHandle("Author cannot be null", "113");
-        }
-        if (book.getAuthor().isEmpty()){
-            throw new ExceptionHandle("Author cannot be empty", "114");
-        }
-
-        return bookRepository.save(book);
+        return bookRepository.save(newBook);
     }
 
     @Override
-    public void deleteBook(Long id) {
-
+    public Book deleteBook(BookRequest bookRequest) throws ExceptionHandle {
+        String isbn = bookRequest.getiSBNCode();
+        Book checkBook = bookRepository.findByISBNCode(isbn);
+        if (checkBook == null) {
+            throw new ExceptionHandle("Isbn code does not exist","404");
+        }else {
+            checkBook.setStatus(true);
+            return bookRepository.save(checkBook);
+        }
     }
 
     @Override
@@ -47,8 +54,18 @@ public class BookService implements IBookService {
     }
 
     @Override
-    public Book updateBook(Book book) {
-        return bookRepository.save(book);
+    public Book updateBook(BookRequest book) throws ExceptionHandle{
+        ExceptionResponse.checkException(book);
+        String isbn = book.getiSBNCode();
+        Book checkBook = bookRepository.findByISBNCode(isbn);
+        if (checkBook == null) {
+            throw new ExceptionHandle("Isbn code does not exist","404");
+        }else {
+            checkBook.setName(book.getName());
+            checkBook.setPrice(book.getPrice());
+            checkBook.setQuantity(book.getQuantity() + book.getQuantity());
+            return bookRepository.save(checkBook);
+        }
     }
 
     @Override
@@ -60,4 +77,5 @@ public class BookService implements IBookService {
     public Book findBookByISBNCode(String isbnCode) {
         return bookRepository.findByISBNCode(isbnCode);
     }
+
 }
