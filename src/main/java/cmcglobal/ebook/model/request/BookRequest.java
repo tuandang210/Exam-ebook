@@ -1,16 +1,15 @@
 package cmcglobal.ebook.model.request;
 
-
 public class BookRequest {
 
     private String name;
     private String iSBNCode;
     private Long price;
     private Long quantity;
-    private String author;
-    private String provider;
+    private Long[] author;
+    private Long provider;
 
-    public BookRequest(String name, String iSBNCode, Long price, Long quantity, String author, String provider) {
+    public BookRequest(String name, String iSBNCode, Long price, Long quantity, Long[] author, Long provider) {
         this.name = name;
         this.iSBNCode = iSBNCode;
         this.price = price;
@@ -22,7 +21,6 @@ public class BookRequest {
     public BookRequest() {
     }
 
-
     public String getName() {
         return name;
     }
@@ -31,11 +29,11 @@ public class BookRequest {
         this.name = name;
     }
 
-    public String getISBNCode() {
+    public String getiSBNCode() {
         return iSBNCode;
     }
 
-    public void setISBNCode(String iSBNCode) {
+    public void setiSBNCode(String iSBNCode) {
         this.iSBNCode = iSBNCode;
     }
 
@@ -55,21 +53,19 @@ public class BookRequest {
         this.quantity = quantity;
     }
 
-    public String getAuthor() {
+    public Long[] getAuthor() {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(Long[] author) {
         this.author = author;
     }
 
-    public String getProvider() {
+    public Long getProvider() {
         return provider;
     }
 
-    public void setProvider(String provider) {
+    public void setProvider(Long provider) {
         this.provider = provider;
     }
-
-
 }
