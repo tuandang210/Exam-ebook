@@ -4,9 +4,9 @@ import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.service.IService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ProviderController {
 
     @PostMapping(value="/addProvider")
     public ResponseEntity<String> addProvider(@RequestBody Provider provider){
-        if(providerService.findByName(provider.getName())==null){
+        if(providerService.findByCode(provider.getCode())==null){
             providerService.add(provider);
             return new ResponseEntity<>("da them Provider", HttpStatus.OK);
         }else return new ResponseEntity<>("da ton tai provider", HttpStatus.OK);
@@ -49,5 +49,20 @@ public class ProviderController {
     return new ResponseEntity<>("Da thay doi trang thái", HttpStatus.OK);
 
     }
+
+    @PutMapping(value="/update")
+    public ResponseEntity<String> updateProvider(@RequestBody Provider provider){
+        providerService.add(provider);
+        return new ResponseEntity<>("Da Cap nhat Provider", HttpStatus.OK);
+
+    }
+
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<String> deleteProvider(@Param("id") Long id){
+        providerService.delete(id);
+        return new ResponseEntity<>("Da  xa nha xuat ban", HttpStatus.OK);
+
+    }
+
 
 }
