@@ -4,6 +4,7 @@ import cmcglobal.ebook.entity.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface IProviderRepository extends JpaRepository<Provider, Long> {
-    Provider getProviderByName(String name);
+    Provider getProviderByCode(String code);
+    Provider getProviderById(Long id);
 
 }

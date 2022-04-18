@@ -5,7 +5,7 @@ import java.util.List;
 public interface IService <E> {
     List<E> findAll();
     E findById(Long id);
-    E findByName(String name);
+    E findByCode(String name);
     void add(E elemenInput);
     void delete(Long id);
     void changeStatus(Long id);

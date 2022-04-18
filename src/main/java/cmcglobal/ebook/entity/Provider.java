@@ -10,6 +10,9 @@ public class Provider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+
+    @Column(unique=true)
+    private String code;
     private String name;
 
     private Boolean status = true;
@@ -62,5 +65,13 @@ public class Provider {
 
     public void setStatus() {
         this.status = !this.status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
