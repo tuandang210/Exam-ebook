@@ -1,9 +1,11 @@
 package cmcglobal.ebook.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Author {
 
     @Id
@@ -11,23 +13,6 @@ public class Author {
 
     private Long id;
     private String name;
-
-    public Set<Book> getBook() {
-        return book;
-    }
-
-    public void setBook(Set<Book> book) {
-        this.book = book;
-    }
-
-    public Author(Long id, String name, Set<Book> book) {
-        this.id = id;
-        this.name = name;
-        this.book = book;
-    }
-
-    @ManyToMany(mappedBy = "author")
-    private Set<Book> book;
 
     public Author(Long id, String name) {
         this.id = id;

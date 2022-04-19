@@ -1,5 +1,6 @@
 package cmcglobal.ebook.exception;
 
+import cmcglobal.ebook.entity.Author;
 import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.model.request.BookRequest;
 
@@ -31,5 +32,17 @@ public class ExceptionResponse {
 //        if (book.getAuthor() == null){
 //            throw new ExceptionHandle("Author cannot be null", "113");
 //        }
+    }
+
+    public static void checkExceptionAuthor(Author author) throws ExceptionHandle{
+        if (author.getName() == null) {
+                throw new ExceptionHandle("Name cannot be null", "000");
+        }
+        if (author.getName().isEmpty()) {
+                throw new ExceptionHandle("Name cannot be empty", "111");
+        }
+        if(author.getId() == null){
+            throw new ExceptionHandle("Cant find author id", "404");
+        }
     }
 }

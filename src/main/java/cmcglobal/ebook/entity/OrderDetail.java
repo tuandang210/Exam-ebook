@@ -1,15 +1,17 @@
 package cmcglobal.ebook.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "book_id", nullable=false)
     private Book books;
     @ManyToOne
     private Order order;

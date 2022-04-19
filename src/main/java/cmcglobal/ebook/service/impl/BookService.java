@@ -8,6 +8,8 @@ import cmcglobal.ebook.model.request.BookRequest;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,6 +81,13 @@ public class BookService implements IBookService {
     @Override
     public Book findBookByISBNCode(String isbnCode) {
         return bookRepository.findByISBNCode(isbnCode);
+    }
+
+    @Override
+    public Page<Book> findAllByNameAndAndAuthorAndProviderAndPriceBetweenAndISBNCode
+            (String name, String author, String provider_id, String isbn_code, Long price1, Long price2, Pageable pageable) {
+        return bookRepository.findAllByNameAndAndAuthorAndProviderAndPriceBetweenAndISBNCode
+                (name, author, provider_id, isbn_code, price1, price2, pageable);
     }
 
 }
