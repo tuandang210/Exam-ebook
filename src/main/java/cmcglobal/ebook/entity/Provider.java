@@ -10,7 +10,14 @@ public class Provider {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     private Long id;
+
+    @Column(unique=true)
+    private String code;
     private String name;
+
+    private Boolean status = true;
+
+
     @OneToMany(mappedBy = "provider")
     private Set<Book> books;
 
@@ -50,5 +57,21 @@ public class Provider {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus() {
+        this.status = !this.status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
