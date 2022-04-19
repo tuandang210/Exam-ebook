@@ -1,5 +1,7 @@
 package cmcglobal.ebook.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ public class Provider {
     private Boolean status = true;
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "provider")
     private Set<Book> books;
 

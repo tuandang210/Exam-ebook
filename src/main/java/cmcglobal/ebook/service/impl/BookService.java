@@ -20,7 +20,7 @@ public class BookService implements IBookService {
 
     @Override
     public Book saveBook(BookRequest book) throws ExceptionHandle {
-        ExceptionResponse.checkException(book);
+        ExceptionResponse.checkExceptionOfBook(book);
         Book newBook = new Book();
         newBook.setName(book.getName());
         newBook.setiSBNCode(book.getiSBNCode());
@@ -55,7 +55,7 @@ public class BookService implements IBookService {
 
     @Override
     public Book updateBook(BookRequest book) throws ExceptionHandle{
-        ExceptionResponse.checkException(book);
+        ExceptionResponse.checkExceptionOfBook(book);
         String isbn = book.getiSBNCode();
         Book checkBook = bookRepository.findByISBNCode(isbn);
         if (checkBook == null) {

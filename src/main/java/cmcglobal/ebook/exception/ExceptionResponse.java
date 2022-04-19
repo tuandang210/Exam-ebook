@@ -1,10 +1,10 @@
 package cmcglobal.ebook.exception;
 
-import cmcglobal.ebook.entity.Book;
+import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.model.request.BookRequest;
 
 public class ExceptionResponse {
-    public static void checkException(BookRequest book) throws ExceptionHandle{
+    public static void checkExceptionOfBook(BookRequest book) throws ExceptionHandle{
 
 
         if (book.getName() == null) {
@@ -32,4 +32,26 @@ public class ExceptionResponse {
 //            throw new ExceptionHandle("Author cannot be null", "113");
 //        }
     }
+
+    public static void checkExceptionOfProvider(Provider provider) throws ExceptionHandle{
+        if(provider.getCode()==null){
+            throw new ExceptionHandle("Provider Code not null", "000");
+        }
+        if(provider.getName().isEmpty()){
+            throw new ExceptionHandle("Provider Name not empty", "000");
+        }
+
+
+    }
+
+    public static void checkExceptionIsExist(String id, Object object) throws ExceptionHandle{
+
+        if(id.isEmpty()){
+            throw new ExceptionHandle("id is not emty", "000");
+        }
+        if(object==null){
+            throw new ExceptionHandle("Object is not exist", "000");
+        }
+    }
+
 }

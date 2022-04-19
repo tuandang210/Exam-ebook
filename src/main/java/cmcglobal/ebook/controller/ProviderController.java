@@ -1,7 +1,12 @@
 package cmcglobal.ebook.controller;
 
+import cmcglobal.ebook.common.ResponseData;
+import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.entity.Provider;
+import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.service.IService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.query.Param;
@@ -14,53 +19,44 @@ import java.util.List;
 @RestController
 @RequestMapping(value="/provider")
 public class ProviderController {
+    private static final Logger log = LoggerFactory.getLogger(BookController.class);
+
     @Autowired
     @Qualifier("provider")
     IService providerService ;
 
     @GetMapping(value="/getAll")
-    public ResponseEntity<List<Provider>> getAllProvider(){
-
-        List<Provider> list = providerService.findAll();
-
-        return new ResponseEntity<>(list, HttpStatus.OK);
+    public ResponseData getAllProvider(){
+        return providerService.findAll();
     }
 
     @GetMapping(value="/getById/{id}")
-    public ResponseEntity<Provider> getProviderById(@PathVariable Long id){
-        Provider provider = (Provider) providerService.findById(id);
-        return new ResponseEntity<>(provider, HttpStatus.OK);
+    public ResponseData getProviderById(@PathVariable Long id){
+      return providerService.findById(id);
+
     }
 
 
     @PostMapping(value="/addProvider")
-    public ResponseEntity<String> addProvider(@RequestBody Provider provider){
-        if(providerService.findByCode(provider.getCode())==null){
-            providerService.add(provider);
-            return new ResponseEntity<>("da them Provider", HttpStatus.OK);
-        }else return new ResponseEntity<>("da ton tai provider", HttpStatus.OK);
-
+    public ResponseData addProvider(@RequestBody Provider provider){
+       return providerService.add(provider);
     }
 
     @PutMapping(value="/changeStatus/{id}")
-    public ResponseEntity<String> changeStatus(@PathVariable Long id){
-     providerService.changeStatus(id);
-
-    return new ResponseEntity<>("Da thay doi trang thái", HttpStatus.OK);
+    public ResponseData changeStatus(@PathVariable Long id){
+        return providerService.changeStatus(id);
 
     }
 
     @PutMapping(value="/update")
-    public ResponseEntity<String> updateProvider(@RequestBody Provider provider){
-        providerService.add(provider);
-        return new ResponseEntity<>("Da Cap nhat Provider", HttpStatus.OK);
+    public ResponseData updateProvider(@RequestBody Provider provider){
+       return providerService.update(provider);
 
     }
 
     @DeleteMapping(value = "/delete")
-    public ResponseEntity<String> deleteProvider(@Param("id") Long id){
-        providerService.delete(id);
-        return new ResponseEntity<>("Da  xa nha xuat ban", HttpStatus.OK);
+    public ResponseData deleteProvider(@Param("id") Long id){
+       return  providerService.delete(id);
 
     }
 
