@@ -1,48 +1,28 @@
 package cmcglobal.ebook.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
 @Table(name = "Book")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
-    @NotNull
     private String name;
-    @NotNull
-    @Column(unique = true, name = "isbn_code")
     private String iSBNCode;
     private Long price;
     private Long quantity;
     private Boolean status = false;
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> author;
     @ManyToOne
-    @JoinColumn(name = "provider_id")
     private Provider provider;
-
-    @OneToMany(mappedBy = "books",fetch = FetchType.EAGER)
-    private Set<OrderDetail> orderDetails;
-
-    public Book(Long id, String name, String iSBNCode, Long price, Long quantity, Boolean status, Set<Author> author, Provider provider, Set<OrderDetail> orderDetails) {
-        this.id = id;
-        this.name = name;
-        this.iSBNCode = iSBNCode;
-        this.price = price;
-        this.quantity = quantity;
-        this.status = status;
-        this.author = author;
-        this.provider = provider;
-        this.orderDetails = orderDetails;
-    }
 
     public Book(Long id, String name, String iSBNCode, Long price, Long quantity, Boolean status, Set<Author> author, Provider provider) {
         this.id = id;

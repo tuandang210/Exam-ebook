@@ -8,6 +8,8 @@ import cmcglobal.ebook.model.request.BookRequest;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.service.IBookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,7 +33,10 @@ public class BookService implements IBookService {
         String isbn = newBook.getiSBNCode();
         Book checkBook = bookRepository.findByISBNCode(isbn);
         if(checkBook != null){
-            updateBook(book);
+            checkBook.setName(book.getName());
+            checkBook.setPrice(book.getPrice());
+            checkBook.setQuantity(book.getQuantity() + checkBook.getQuantity());
+            return bookRepository.save(checkBook);
         }
         return bookRepository.save(newBook);
     }
@@ -63,7 +68,7 @@ public class BookService implements IBookService {
         }else {
             checkBook.setName(book.getName());
             checkBook.setPrice(book.getPrice());
-            checkBook.setQuantity(book.getQuantity() + book.getQuantity());
+            checkBook.setQuantity(book.getQuantity() + checkBook.getQuantity());
             return bookRepository.save(checkBook);
         }
     }
@@ -76,6 +81,13 @@ public class BookService implements IBookService {
     @Override
     public Book findBookByISBNCode(String isbnCode) {
         return bookRepository.findByISBNCode(isbnCode);
+    }
+
+    @Override
+    public Page<Book> findAllByNameAndAndAuthorAndProviderAndPriceBetweenAndISBNCode
+            (String name, String author, String provider_id, String isbn_code, Long price1, Long price2, Pageable pageable) {
+        return bookRepository.findAllByNameAndAndAuthorAndProviderAndPriceBetweenAndISBNCode
+                (name, author, provider_id, isbn_code, price1, price2, pageable);
     }
 
 }

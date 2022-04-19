@@ -1,9 +1,12 @@
 package cmcglobal.ebook.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
-import java.util.Set;
+
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,25 +14,6 @@ public class Customer {
     private String name;
     private String email;
     private String phone;
-
-    @OneToMany(mappedBy = "customer")
-    private Set<Order> orders;
-
-    public Set<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
-
-    public Customer(Long id, String name, String email, String phone, Set<Order> orders) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.orders = orders;
-    }
 
     public Long getId() {
         return id;
