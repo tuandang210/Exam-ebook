@@ -1,4 +1,4 @@
-package cmcglobal.ebook.model;
+package cmcglobal.ebook.entity;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -7,14 +7,13 @@ import java.util.Set;
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
     private String name;
     private String email;
     private String phone;
-    @OneToMany(mappedBy = "customer")
 
-    private Set<Order> orders ;
+    @OneToMany(mappedBy = "customer")
+    private Set<Order> orders;
 
     public Set<Order> getOrders() {
         return orders;
