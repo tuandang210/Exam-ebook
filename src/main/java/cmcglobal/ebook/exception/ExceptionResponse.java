@@ -27,12 +27,12 @@ public class ExceptionResponse {
         if (book.getiSBNCode().isEmpty()) {
             throw new ExceptionHandle("ISBN code cannot be empty", "117");
         }
-//        if (book.getProvider() == null ){
-//            throw new ExceptionHandle("Provider cannot be null", "118" );
-//        }
-//        if (book.getAuthor() == null){
-//            throw new ExceptionHandle("Author cannot be null", "113");
-//        }
+        if (book.getProvider() == null ){
+            throw new ExceptionHandle("Provider cannot be null", "118" );
+        }
+        if (book.getAuthor() == null){
+            throw new ExceptionHandle("Author cannot be null", "113");
+        }
     }
 
     public static void checkExceptionOfProvider(Provider provider) throws ExceptionHandle{

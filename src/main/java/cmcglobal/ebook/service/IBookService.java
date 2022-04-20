@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface IBookService {
      Book saveBook(BookRequest book) throws ExceptionHandle;
-     Book deleteBook(BookRequest bookRequest) throws ExceptionHandle;
+     void deleteBook(Long id) throws ExceptionHandle;
      List<Book> getAll();
      Book updateBook (BookRequest book) throws ExceptionHandle;
      Book getBookById (Long id);
