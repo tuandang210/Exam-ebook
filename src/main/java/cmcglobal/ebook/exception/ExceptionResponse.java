@@ -1,9 +1,12 @@
 package cmcglobal.ebook.exception;
 
+import cmcglobal.ebook.entity.Customer;
 import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.entity.Author;
 import cmcglobal.ebook.entity.Book;
+import cmcglobal.ebook.model.request.BookOrderRequest;
 import cmcglobal.ebook.model.request.BookRequest;
+import cmcglobal.ebook.model.request.OrderRequest;
 
 public class ExceptionResponse {
     public static void checkExceptionOfBook(BookRequest book) throws ExceptionHandle{
@@ -67,5 +70,30 @@ public class ExceptionResponse {
 //        if(author.getId() == null){
 //            throw new ExceptionHandle("Cant find author id", "404");
 //        }
+    }
+
+    public static void checkExceptionOfOrderDetail(OrderRequest orderRequest) throws ExceptionHandle{
+        if(orderRequest.getBookOrderRequestList() == null || orderRequest.getBookOrderRequestList().isEmpty()){
+            throw new ExceptionHandle("ISBN Code can not null or empty", "000");
+        }
+        if(orderRequest.getCustomer() == null){
+            throw new ExceptionHandle("Customer can not be null", "023");
+        }
+
+    }
+
+    public static void checkExceptionOfCustomer(Customer customer) throws ExceptionHandle {
+        if(customer == null){
+            throw new ExceptionHandle("Customer can not be null", "000");
+        }
+    }
+
+    public static void checkExceptionOfBookOrderRequest(BookOrderRequest bookOrderRequest) throws ExceptionHandle {
+        if(bookOrderRequest.getIsbnCode() == null){
+            throw new ExceptionHandle("ISBN code can not be null", "000");
+        }
+        if(bookOrderRequest.getQuantityOfBookOrder() == 0){
+            throw new ExceptionHandle("Quantity can not be 0", "000");
+        }
     }
 }

@@ -2,6 +2,7 @@ package cmcglobal.ebook.service;
 
 import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.entity.Provider;
+import cmcglobal.ebook.exception.ExceptionHandle;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface IService<E>  {
     ResponseData findByCode(String name);
 
 
-    ResponseData add(E elemenInput);
+    ResponseData add(E elemenInput) throws ExceptionHandle;
 
     ResponseData delete(Long id);
     ResponseData changeStatus(Long id);
