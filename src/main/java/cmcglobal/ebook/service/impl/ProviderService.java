@@ -5,21 +5,20 @@ import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.exception.ExceptionResponse;
+import cmcglobal.ebook.model.response.ProviderResponse;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.repository.IProviderRepository;
-import cmcglobal.ebook.service.IService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Qualifier("provider")
-public class ProviderService implements IService <Provider> {
+public class ProviderService implements IServiceAddGetConditions <Provider> {
 
     @Autowired
+
     IProviderRepository providerRepository;
 
     @Autowired
@@ -60,7 +59,15 @@ public class ProviderService implements IService <Provider> {
     public ResponseData findByCode(String name) {
         ResponseData responseData = new ResponseData();
         Provider provider = providerRepository.getProviderByCode(name);
+
+
         if(provider!=null){
+            ProviderResponse providerResponse = new ProviderResponse();
+            List<String> namebooks= providerRepository.getAllBookByProviderCode(name);
+
+            providerResponse.setCode(provider.getCode());
+            providerResponse.setName(provider.getName());
+
             responseData.setData(provider);
             responseData.setMessage("Find By Code Name");
             responseData.setStatus("Success");
@@ -74,6 +81,7 @@ public class ProviderService implements IService <Provider> {
 
         return responseData;
     }
+
 
 
 
@@ -115,9 +123,9 @@ public class ProviderService implements IService <Provider> {
     public ResponseData delete(Long id) {
         ResponseData responseData = new ResponseData();
         Provider provider = providerRepository.getById(id);
-        Book book = bookRepository.getBookByProvider(provider);
+        List<Book> books = bookRepository.getBookByProvider(provider);
 
-        if(provider !=null && book==null){
+        if(provider !=null && books.isEmpty()){
             providerRepository.delete(provider);
             responseData.setData(provider);
             responseData.setMessage("DELETE");
@@ -193,4 +201,25 @@ public class ProviderService implements IService <Provider> {
     }
 
 
+    @Override
+    public ResponseData getAllByRequest(Provider inputElement) {
+        ResponseData responseData = new ResponseData();
+        List<?> providerList = providerRepository.getAllProviderByConditions(inputElement.getCode(), inputElement.getName());
+        responseData.setData(providerList);
+        responseData.setMessage("FindAllByConditions");
+        responseData.setStatus("Success");
+        responseData.setCode("200");
+        return responseData;
+    }
+
+    @Override
+    public ResponseData getAllResponseProvider(String[] codes) {
+        ResponseData responseData = new ResponseData();
+//        List<?> providerList = providerRepository.getAllResponseProvider(codes);
+//        responseData.setData(providerList);
+        responseData.setMessage("FindAllByConditions");
+        responseData.setStatus("Success");
+        responseData.setCode("200");
+        return responseData;
+    }
 }

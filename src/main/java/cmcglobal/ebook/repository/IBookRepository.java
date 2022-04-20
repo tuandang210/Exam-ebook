@@ -17,7 +17,7 @@ import java.util.List;
 public interface IBookRepository extends JpaRepository<Book,Long> {
     @Query(value = "select * from book b where b.isbn_code = :isbn", nativeQuery = true)
     Book findByISBNCode(@Param("isbn") String isbn);
-    Book getBookByProvider(Provider provider);
+    List<Book> getBookByProvider(Provider provider);
     @Query(value = "select * from book b join book_author ba on b.id = ba.book_id join provider p on p.id = b.provider_id where b.status = false and b.name like %?1% and ba.author_id like %?2% and p.id like %?3% and b.isbncode like %?4% and b.price between ?5 and ?6 group by b.name order by b.name asc", nativeQuery = true)
     Page<Book> findAllByNameAndAndAuthorAndProviderAndPriceBetweenAndISBNCode
             (String name, String author, String provider_id, String isbn_code, Long price1, Long price2, Pageable pageable);

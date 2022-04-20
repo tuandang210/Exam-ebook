@@ -10,11 +10,12 @@ public interface IService<E>  {
     ResponseData findById(Long id);
     ResponseData findByCode(String name);
 
-
     ResponseData add(E elemenInput);
 
     ResponseData delete(Long id);
     ResponseData changeStatus(Long id);
 
     ResponseData update(Provider provider);
+
+
 }

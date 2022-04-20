@@ -4,7 +4,9 @@ import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.exception.ExceptionHandle;
+import cmcglobal.ebook.model.request.ProviderRequest;
 import cmcglobal.ebook.service.IService;
+import cmcglobal.ebook.service.impl.IServiceAddGetConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,7 @@ public class ProviderController {
     private static final Logger log = LoggerFactory.getLogger(BookController.class);
 
     @Autowired
-    @Qualifier("provider")
-    IService providerService ;
+    IServiceAddGetConditions providerService ;
 
     @GetMapping(value="/getAll")
     public ResponseData getAllProvider(){
@@ -59,6 +60,26 @@ public class ProviderController {
        return  providerService.delete(id);
 
     }
+
+    @GetMapping(value="/getBookOfProvider")
+    public ResponseData getBookOfProvider(@Param("code") String code){
+        return providerService.findByCode(code);
+    }
+
+
+
+
+    @GetMapping(value="/getByRequest")
+    public ResponseData getProviderByRequest(@RequestBody Provider providerRequest){
+        return providerService.getAllByRequest(providerRequest);
+    }
+//
+//    @GetMapping(value="/getAllByMultipleData")
+//    public ResponseData getProviderByRequest(String[] nxbCode){
+//        return providerService.getAllByRequest(nxbCode);
+//    }
+
+
 
 
 }

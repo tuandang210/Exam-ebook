@@ -64,8 +64,8 @@ public class ExceptionResponse {
         if (author.getName().isEmpty()) {
                 throw new ExceptionHandle("Name cannot be empty", "111");
         }
-        if(author.getId() == null){
-            throw new ExceptionHandle("Cant find author id", "404");
-        }
+//        if(author.getId() == null){
+//            throw new ExceptionHandle("Cant find author id", "404");
+//        }
     }
 }
