@@ -5,6 +5,8 @@ import cmcglobal.ebook.entity.Author;
 import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.exception.ExceptionResponse;
+import cmcglobal.ebook.model.response.AuthorResponse;
+import cmcglobal.ebook.model.response.BookResponse;
 import cmcglobal.ebook.repository.IAuthorRepository;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.service.IAuthorService;
@@ -87,8 +89,8 @@ public class AuthorService implements IAuthorService {
     }
 
     @Override
-    public int isAuthorStillHasBookInStock(Long id) {
-        return authorRepository.isAuthorStillHasBookInStock(id);
+    public int countBookInStock(Long id) {
+        return authorRepository.countBookInStock(id);
     }
 
     @Override
@@ -112,5 +114,32 @@ public class AuthorService implements IAuthorService {
             responseData.setStatus("ERROR");
         }
         return responseData;
+    }
+
+    @Override
+    public ResponseData getDataOfAuthor(Long id) {
+        ResponseData responseData = new ResponseData();
+        try {
+            Author oldAuthor = findById(id);
+            if(oldAuthor != null){
+                List<?> bookResponses = authorRepository.getDataOfAuthor(id);
+                int count = countBookInStock(id);
+                AuthorResponse authorResponse = new AuthorResponse();
+                authorResponse.setName(oldAuthor.getName());
+                authorResponse.setCountOfBook(count);
+                authorResponse.setBooks((List<BookResponse>) bookResponses);
+                responseData.setData(authorResponse);
+                responseData.setStatus("OK");
+                responseData.setCode("200");
+                responseData.setMessage("SUCCESS");
+            } else throw new HandlerException("This id isn't exist", "404");
+        }catch (Exception e){
+            e.printStackTrace();
+            responseData.setCode("404");
+            responseData.setMessage(e.getMessage());
+            responseData.setStatus("ERROR");
+        }
+        return responseData;
+
     }
 }
