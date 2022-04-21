@@ -7,12 +7,10 @@ import cmcglobal.ebook.exception.ExceptionResponse;
 import cmcglobal.ebook.model.request.BookOrderRequest;
 import cmcglobal.ebook.model.request.OrderRequest;
 import cmcglobal.ebook.repository.IBookRepository;
-import cmcglobal.ebook.repository.ICustomerRepository;
 import cmcglobal.ebook.repository.IOrderDetailRepository;
-import cmcglobal.ebook.repository.IOrderRepository;
+import cmcglobal.ebook.service.IBookService;
 import cmcglobal.ebook.service.IOrderDetailService;
 import cmcglobal.ebook.service.IService;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +26,15 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
     private IBookRepository bookRepository;
 
     @Autowired
+    private IBookService bookService;
+
+    @Autowired
     private OrderService orderService;
 
     @Autowired
     private CustomerService customerService;
+
+
 
     @Override
     public ResponseData findAll() {
@@ -73,31 +76,38 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
         ExceptionResponse.checkExceptionOfOrderDetail(orderRequest);
         ResponseData responseData = new ResponseData();
         try {
-            Customer checkCustomer = customerService.findCustomerByName(orderRequest.getCustomer().getName());
+            Customer checkCustomer = customerService.findCustomerByEmail(orderRequest.getCustomer().getEmail());
 
             Order order = new Order();
             order.setCustomer(orderRequest.getCustomer());
 
             if(checkCustomer == null){
                 ResponseData customer = customerService.add(orderRequest.getCustomer());
-                Customer checkNewCustomer = customerService.findCustomerByName(orderRequest.getCustomer().getName());
+                Customer checkNewCustomer = customerService.findCustomerByEmail(orderRequest.getCustomer().getEmail());
                 order.setCustomer(checkNewCustomer);
             }else {
                 order.setCustomer(checkCustomer);
             }
 
-            ResponseData newOrder = orderService.add(order);
+
 
             List<BookOrderRequest> bookList = orderRequest.getBookOrderRequestList();
+            ResponseData newOrder = orderService.add(order);
+
 
             for (BookOrderRequest bookOrderRequest : bookList) {
                 OrderDetail newOrderDetail = new OrderDetail();
                 Book book = bookRepository.findByISBNCode(bookOrderRequest.getIsbnCode());
-                if (book != null) {
+                if (book != null && !book.getStatus()) {
                     newOrderDetail.setOrder(order);
                     newOrderDetail.setBooks(book);
                     Long quantityNewOrder = (long) bookOrderRequest.getQuantityOfBookOrder();
+                    if(book.getQuantity() < quantityNewOrder){
+                        throw new ExceptionHandle("Out of quantity", "500");
+                    }
                     newOrderDetail.setQuantity(quantityNewOrder);
+                    book.setQuantity(book.getQuantity() - quantityNewOrder);
+                    bookRepository.save(book);
                     orderDetailRepository.save(newOrderDetail);
                 }
             }
@@ -105,6 +115,12 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
             responseData.setCode("200");
             responseData.setStatus("SUCCESS");
             responseData.setMessage("ADDED");
+        }
+        catch (ExceptionHandle e){
+            responseData.setMessage(e.getMessage());
+            e.printStackTrace();
+            responseData.setCode(e.getCode());
+            responseData.setStatus("OUT OF QUANTITY");
         } catch (Exception e){
             responseData.setMessage(e.getMessage());
             e.printStackTrace();

@@ -89,7 +89,7 @@ public class BookController {
         return responseData;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseData searchBook(@RequestBody BookSearch bookSearch, Pageable pageable) {
         ResponseData responseData = new ResponseData();
         try {

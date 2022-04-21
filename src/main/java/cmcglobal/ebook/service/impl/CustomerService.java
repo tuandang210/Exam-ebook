@@ -36,7 +36,7 @@ public class CustomerService implements IService<Customer>, ICustomerService {
         ResponseData responseData = new ResponseData();
         ExceptionResponse.checkExceptionOfCustomer(elementInput);
         try {
-            Customer customer = customerRepository.findCustomerByName(elementInput.getName());
+            Customer customer = customerRepository.findCustomerByEmail(elementInput.getEmail());
             if(customer == null){
                 customerRepository.save(elementInput);
                 responseData.setData(elementInput);
@@ -69,7 +69,7 @@ public class CustomerService implements IService<Customer>, ICustomerService {
     }
 
     @Override
-    public Customer findCustomerByName(String name) {
-        return customerRepository.findCustomerByName(name);
+    public Customer findCustomerByEmail(String email) {
+        return customerRepository.findCustomerByEmail(email);
     }
 }
