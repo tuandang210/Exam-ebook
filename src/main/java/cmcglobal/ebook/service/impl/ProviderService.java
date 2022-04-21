@@ -64,12 +64,17 @@ public class ProviderService implements IServiceAddGetConditions <Provider> {
         if(provider!=null){
             ProviderResponse providerResponse = new ProviderResponse();
             int number= providerRepository.getQuantityOfBookByProvider(name);
+            List<?> books = providerRepository.getFiveBooksAreTopOrder(name);
+
 
             providerResponse.setCode(provider.getCode());
             providerResponse.setName(provider.getName());
+            providerResponse.setQuantityOfBook(number);
+            providerResponse.setNameBooks(books);
 
-            responseData.setData(provider);
-            responseData.setMessage("Find By Code Name");
+
+            responseData.setData(providerResponse);
+            responseData.setMessage("Find 5 book are Top Order");
             responseData.setStatus("Success");
             responseData.setCode("200");
         }

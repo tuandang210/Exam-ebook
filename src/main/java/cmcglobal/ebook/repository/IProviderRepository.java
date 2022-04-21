@@ -25,6 +25,21 @@ public interface IProviderRepository extends JpaRepository<Provider, Long> {
     int getQuantityOfBookByProvider(String name);
 
 
+//    @Query(value="SELECT bo.name, sum(od.quantity)" +
+//            "FROM PROVIDER pro" +
+//            "join BOOK bo  " +
+//            "on pro.id=bo.provider_id" +
+//            "join order_detail od" +
+//            "on bo.id= od.books_id" +
+//            "WHERE pro.code=?1" +
+//            "Group By bo.id" +
+//            "order by sum(od.quantity)  desc" +
+//            "limit 5;", nativeQuery = true)
+//    List<?> getFiveBooksAreTopOrder(String name);
+
+
+    @Query(value="SELECT bo.name, sum(od.quantity)FROM PROVIDER pro join BOOK bo on pro.id=bo.provider_id join order_detail od on bo.id= od.books_id  WHERE pro.code=?1 Group By bo.id order by sum(od.quantity)  desc limit 5;", nativeQuery = true)
+    List<?> getFiveBooksAreTopOrder(String name);
 
 
 }

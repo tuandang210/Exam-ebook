@@ -8,7 +8,7 @@ public class ProviderResponse {
 
     //thuoc tinh join table
     private int quantityOfBook;
-    private List<String> nameBooks;
+    private List<?> nameBooks;
 
 
     public String getCode() {
@@ -43,11 +43,11 @@ public class ProviderResponse {
         this.quantityOfBook = quantityOfBook;
     }
 
-    public List<String> getNameBooks() {
+    public List<?> getNameBooks() {
         return nameBooks;
     }
 
-    public void setNameBooks(List<String> nameBooks) {
+    public void setNameBooks(List<?> nameBooks) {
         this.nameBooks = nameBooks;
     }
 }
