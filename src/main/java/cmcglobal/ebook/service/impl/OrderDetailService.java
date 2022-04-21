@@ -8,10 +8,9 @@ import cmcglobal.ebook.model.request.BookOrderRequest;
 import cmcglobal.ebook.model.request.OrderRequest;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.repository.IOrderDetailRepository;
-import cmcglobal.ebook.service.IBookService;
-import cmcglobal.ebook.service.IOrderDetailService;
-import cmcglobal.ebook.service.IService;
+import cmcglobal.ebook.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,10 +27,12 @@ public class OrderDetailService implements  IOrderDetailService {
 
 
     @Autowired
-    private OrderService orderService;
+    @Qualifier(value = "orderService")
+    private IAddEntity orderService;
 
     @Autowired
-    private CustomerService customerService;
+    @Qualifier(value = "CustomerService")
+    private ICustomerService customerService;
 
 
 
@@ -52,7 +53,7 @@ public class OrderDetailService implements  IOrderDetailService {
                 return responseData;
             }
             Customer checkCustomer = customerService.findCustomerByEmail(orderRequest.getCustomer().getEmail());
-
+        //save new Order
             Order order = new Order();
             order.setCustomer(orderRequest.getCustomer());
 
@@ -64,13 +65,10 @@ public class OrderDetailService implements  IOrderDetailService {
             }else {
                 order.setCustomer(checkCustomer);
             }
-
-
-
             List<BookOrderRequest> bookList = orderRequest.getBookOrderRequestList();
             ResponseData newOrder = orderService.add(order);
 
-
+        // save order-detail and change quantity Of book
             for (BookOrderRequest bookOrderRequest : bookList) {
                 OrderDetail newOrderDetail = new OrderDetail();
                 Book book = bookRepository.findByISBNCode(bookOrderRequest.getIsbnCode());
@@ -83,9 +81,8 @@ public class OrderDetailService implements  IOrderDetailService {
                 book.setQuantity(book.getQuantity() - quantityNewOrder);
                 bookRepository.save(book);
                 orderDetailRepository.save(newOrderDetail);
-
             }
-
+        //set value to sent to controller
             responseData.setCode("200");
             responseData.setStatus("SUCCESS");
             responseData.setMessage("ADDED");

@@ -2,32 +2,19 @@ package cmcglobal.ebook.service.impl;
 
 import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.entity.Order;
-import cmcglobal.ebook.entity.Provider;
-import cmcglobal.ebook.exception.ExceptionResponse;
 import cmcglobal.ebook.repository.IOrderRepository;
-import cmcglobal.ebook.service.IService;
+import cmcglobal.ebook.service.IAddEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderService implements IService<Order> {
+@Qualifier(value = "orderService")
+public class OrderService implements IAddEntity<Order> {
     @Autowired
     private IOrderRepository iOrderRepository;
 
-    @Override
-    public ResponseData findAll() {
-        return null;
-    }
-
-    @Override
-    public ResponseData findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public ResponseData findByCode(String name) {
-        return null;
-    }
 
     @Override
     public ResponseData add(Order elementInput) {
@@ -48,18 +35,5 @@ public class OrderService implements IService<Order> {
         return responseData;
     }
 
-    @Override
-    public ResponseData delete(Long id) {
-        return null;
-    }
 
-    @Override
-    public ResponseData changeStatus(Long id) {
-        return null;
-    }
-
-    @Override
-    public ResponseData update(Provider provider) {
-        return null;
-    }
 }
