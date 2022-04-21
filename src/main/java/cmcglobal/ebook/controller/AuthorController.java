@@ -1,12 +1,11 @@
 package cmcglobal.ebook.controller;
 
+import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.entity.Author;
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.service.IAuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,18 +15,23 @@ public class AuthorController {
     @Autowired
     private IAuthorService authorService;
 
-    @GetMapping("/add")
-    public ResponseEntity<?> addNewAuthor(@RequestBody Author author) throws ExceptionHandle {
-        return new ResponseEntity<>(authorService.save(author), HttpStatus.CREATED);
+    @PostMapping("/add")
+    public ResponseData addNewAuthor(@RequestBody Author author) throws ExceptionHandle {
+        return authorService.save(author);
     }
 
     @PostMapping("/update")
-    public ResponseEntity<?> updateAuthor(@RequestBody Author author) throws ExceptionHandle {
-        return new ResponseEntity<>(authorService.update(author), HttpStatus.OK);
+    public ResponseData updateAuthor(@RequestBody Author author) throws ExceptionHandle {
+        return authorService.update(author);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteAuthor(@Param("id") Long id) throws ExceptionHandle {
-        return new ResponseEntity<>(authorService.deleteAuthor(id), HttpStatus.OK);
+    public ResponseData deleteAuthor(@Param("id") Long id) throws ExceptionHandle {
+        return authorService.deleteAuthor(id);
+    }
+
+    @GetMapping("/detail")
+    public ResponseData getAuthorDetail(@Param("id") Long id){
+        return authorService.getDataOfAuthor(id);
     }
 }

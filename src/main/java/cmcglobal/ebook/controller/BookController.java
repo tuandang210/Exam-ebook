@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -68,11 +69,10 @@ public class BookController {
     }
 
     @DeleteMapping("/delete-book")
-    public ResponseData deleteBook(@RequestBody BookRequest bookRequest){
+    public ResponseData deleteBook(@Param("id") Long id){
         ResponseData responseData = new ResponseData();
         try {
-            Book book = serviceBook.deleteBook(bookRequest);
-            responseData.setData(book);
+            serviceBook.deleteBook(id);
             responseData.setMessage("DELETED");
             responseData.setStatus("SUCCESS");
             responseData.setCode("202");
@@ -89,7 +89,7 @@ public class BookController {
         return responseData;
     }
 
-    @GetMapping("/search")
+    @PostMapping("/search")
     public ResponseData searchBook(@RequestBody BookSearch bookSearch, Pageable pageable) {
         ResponseData responseData = new ResponseData();
         try {

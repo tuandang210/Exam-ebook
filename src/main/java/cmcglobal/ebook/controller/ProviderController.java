@@ -39,7 +39,7 @@ public class ProviderController {
 
 
     @PostMapping(value="/addProvider")
-    public ResponseData addProvider(@RequestBody Provider provider){
+    public ResponseData addProvider(@RequestBody Provider provider) throws ExceptionHandle {
        return providerService.add(provider);
     }
 
