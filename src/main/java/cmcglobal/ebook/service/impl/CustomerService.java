@@ -8,6 +8,7 @@ import cmcglobal.ebook.exception.ExceptionResponse;
 import cmcglobal.ebook.repository.ICustomerRepository;
 import cmcglobal.ebook.service.ICustomerService;
 import cmcglobal.ebook.service.IService;
+import com.sun.xml.internal.ws.handler.HandlerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,21 +36,15 @@ public class CustomerService implements IService<Customer>, ICustomerService {
     public ResponseData add(Customer elementInput) throws ExceptionHandle {
         ResponseData responseData = new ResponseData();
         ExceptionResponse.checkExceptionOfCustomer(elementInput);
-        try {
-            Customer customer = customerRepository.findCustomerByEmail(elementInput.getEmail());
-            if(customer == null){
+        Customer customer = customerRepository.findCustomerByEmail(elementInput.getEmail());
+            if(customer == null) {
                 customerRepository.save(elementInput);
                 responseData.setData(elementInput);
                 responseData.setCode("200");
                 responseData.setMessage("SUCCESS");
                 responseData.setStatus("ADDED");
             }
-        }catch (Exception e){
-            responseData.setMessage(e.getMessage());
-            e.printStackTrace();
-            responseData.setCode("400");
-            responseData.setStatus("ERROR");
-        }
+
         return responseData;
     }
 

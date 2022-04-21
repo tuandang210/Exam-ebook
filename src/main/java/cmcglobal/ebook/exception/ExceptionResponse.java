@@ -86,6 +86,12 @@ public class ExceptionResponse {
         if(customer == null){
             throw new ExceptionHandle("Customer can not be null", "000");
         }
+        if(customer.getEmail()==null && customer.getEmail().equals("")){
+            throw new ExceptionHandle("Customer can not be empty", "000");
+        }
+        if(!customer.getEmail().matches("^[a-zA-Z0-9]*@[a-zA-Z]*.{2,6}$")){
+            throw new ExceptionHandle("Email must like 'example69@gmail.com'", "000");
+        }
     }
 
     public static void checkExceptionOfBookOrderRequest(BookOrderRequest bookOrderRequest) throws ExceptionHandle {

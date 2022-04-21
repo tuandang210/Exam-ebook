@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrderDetailService implements IService<OrderDetail>, IOrderDetailService {
+public class OrderDetailService implements  IOrderDetailService {
 
     @Autowired
     private IOrderDetailRepository orderDetailRepository;
@@ -25,8 +25,7 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
     @Autowired
     private IBookRepository bookRepository;
 
-    @Autowired
-    private IBookService bookService;
+
 
     @Autowired
     private OrderService orderService;
@@ -36,52 +35,29 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
 
 
 
-    @Override
-    public ResponseData findAll() {
-        return null;
-    }
 
     @Override
-    public ResponseData findById(Long id) {
-        return null;
-    }
+    public ResponseData saveNewOrderDetail(OrderRequest orderRequest)  {
 
-    @Override
-    public ResponseData findByCode(String name) {
-        return null;
-    }
-
-    @Override
-    public ResponseData add(OrderDetail elementInput) {
-        return null;
-    }
-
-    @Override
-    public ResponseData delete(Long id) {
-        return null;
-    }
-
-    @Override
-    public ResponseData changeStatus(Long id) {
-        return null;
-    }
-
-    @Override
-    public ResponseData update(Provider provider) {
-        return null;
-    }
-
-    @Override
-    public ResponseData saveNewOrderDetail(OrderRequest orderRequest) throws ExceptionHandle {
-        ExceptionResponse.checkExceptionOfOrderDetail(orderRequest);
         ResponseData responseData = new ResponseData();
+
         try {
+            //validation order
+            ExceptionResponse.checkExceptionOfOrderDetail(orderRequest);
+            boolean check = checkQuantityOfBookInService(orderRequest.getBookOrderRequestList());
+            if(!check){
+                responseData.setMessage("The list of books with limited quantities is out");
+                responseData.setCode("322");
+                responseData.setStatus("ERROR");
+                return responseData;
+            }
             Customer checkCustomer = customerService.findCustomerByEmail(orderRequest.getCustomer().getEmail());
 
             Order order = new Order();
             order.setCustomer(orderRequest.getCustomer());
 
             if(checkCustomer == null){
+                //validation customer
                 ResponseData customer = customerService.add(orderRequest.getCustomer());
                 Customer checkNewCustomer = customerService.findCustomerByEmail(orderRequest.getCustomer().getEmail());
                 order.setCustomer(checkNewCustomer);
@@ -98,18 +74,16 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
             for (BookOrderRequest bookOrderRequest : bookList) {
                 OrderDetail newOrderDetail = new OrderDetail();
                 Book book = bookRepository.findByISBNCode(bookOrderRequest.getIsbnCode());
-                if (book != null && !book.getStatus()) {
-                    newOrderDetail.setOrder(order);
-                    newOrderDetail.setBooks(book);
-                    Long quantityNewOrder = (long) bookOrderRequest.getQuantityOfBookOrder();
-                    if(book.getQuantity() < quantityNewOrder){
-                        throw new ExceptionHandle("Out of quantity", "500");
-                    }
-                    newOrderDetail.setQuantity(quantityNewOrder);
-                    book.setQuantity(book.getQuantity() - quantityNewOrder);
-                    bookRepository.save(book);
-                    orderDetailRepository.save(newOrderDetail);
-                }
+
+                newOrderDetail.setOrder(order);
+                newOrderDetail.setBooks(book);
+                Long quantityNewOrder = (long) bookOrderRequest.getQuantityOfBookOrder();
+
+                newOrderDetail.setQuantity(quantityNewOrder);
+                book.setQuantity(book.getQuantity() - quantityNewOrder);
+                bookRepository.save(book);
+                orderDetailRepository.save(newOrderDetail);
+
             }
 
             responseData.setCode("200");
@@ -120,7 +94,7 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
             responseData.setMessage(e.getMessage());
             e.printStackTrace();
             responseData.setCode(e.getCode());
-            responseData.setStatus("OUT OF QUANTITY");
+            responseData.setStatus("ERROR");
         } catch (Exception e){
             responseData.setMessage(e.getMessage());
             e.printStackTrace();
@@ -128,5 +102,19 @@ public class OrderDetailService implements IService<OrderDetail>, IOrderDetailSe
             responseData.setStatus("ERROR");
         }
         return responseData;
+    }
+
+    private boolean checkQuantityOfBookInService(List<BookOrderRequest> bookOrderRequest)  {
+        boolean check= true;
+        for (BookOrderRequest x : bookOrderRequest){
+            Book book = bookRepository.findByISBNCode(x.getIsbnCode());
+            if(book != null && !book.getStatus()){
+                Long quantityNewOrder = (long) x.getQuantityOfBookOrder();
+                if(book.getQuantity() < quantityNewOrder){
+                    check = false;
+                }
+            }
+        }
+        return check;
     }
 }
