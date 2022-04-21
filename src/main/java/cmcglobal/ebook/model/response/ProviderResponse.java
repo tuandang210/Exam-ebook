@@ -6,9 +6,9 @@ public class ProviderResponse {
     private String code;
     private String name;
 
-//    //thuoc tinh join table
-//    private int quantityOfBook;
-//    private List<String> nameBooks;
+    //thuoc tinh join table
+    private int quantityOfBook;
+    private List<String> nameBooks;
 
 
     public String getCode() {
@@ -35,19 +35,19 @@ public class ProviderResponse {
     public ProviderResponse() {
     }
 
-//        public int getQuantityOfBook() {
-//        return quantityOfBook;
-//    }
-//
-//    public void setQuantityOfBook(int quantityOfBook) {
-//        this.quantityOfBook = quantityOfBook;
-//    }
-//
-//    public List<String> getNameBooks() {
-//        return nameBooks;
-//    }
-//
-//    public void setNameBooks(List<String> nameBooks) {
-//        this.nameBooks = nameBooks;
-//    }
+        public int getQuantityOfBook() {
+        return quantityOfBook;
+    }
+
+    public void setQuantityOfBook(int quantityOfBook) {
+        this.quantityOfBook = quantityOfBook;
+    }
+
+    public List<String> getNameBooks() {
+        return nameBooks;
+    }
+
+    public void setNameBooks(List<String> nameBooks) {
+        this.nameBooks = nameBooks;
+    }
 }

@@ -21,7 +21,10 @@ public interface IProviderRepository extends JpaRepository<Provider, Long> {
     List<ProviderResponse> getAllProviderByConditions(String code, String name);
 
 
-    @Query(value="SELECT bo.name FROM PROVIDER pro join BOOK bo  on pro.id=bo.provider_id WHERE pro.code=?1", nativeQuery = true)
+    @Query(value="SELECT COUNT(bo.name)as number FROM PROVIDER pro join BOOK bo  on pro.id=bo.provider_id WHERE pro.code=?1", nativeQuery = true)
+    int getQuantityOfBookByProvider(String name);
 
-    List<String> getAllBookByProviderCode(String name);
+
+
+
 }

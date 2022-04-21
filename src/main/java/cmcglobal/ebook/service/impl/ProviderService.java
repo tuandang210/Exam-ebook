@@ -63,7 +63,7 @@ public class ProviderService implements IServiceAddGetConditions <Provider> {
 
         if(provider!=null){
             ProviderResponse providerResponse = new ProviderResponse();
-            List<String> namebooks= providerRepository.getAllBookByProviderCode(name);
+            int number= providerRepository.getQuantityOfBookByProvider(name);
 
             providerResponse.setCode(provider.getCode());
             providerResponse.setName(provider.getName());
