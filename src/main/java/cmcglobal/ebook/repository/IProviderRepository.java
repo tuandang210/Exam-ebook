@@ -3,14 +3,24 @@ package cmcglobal.ebook.repository;
 import cmcglobal.ebook.entity.Provider;
 import cmcglobal.ebook.model.response.dto.INameBooks;
 import cmcglobal.ebook.model.response.ProviderResponse;
+import cmcglobal.ebook.repository.impl.IProviderRepositoryExtend;
+import org.hibernate.annotations.SQLUpdate;
+import org.hibernate.engine.spi.SessionDelegatorBaseImpl;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-public interface IProviderRepository extends JpaRepository<Provider, Long> {
+public interface IProviderRepository extends JpaRepository<Provider, Long>, IProviderRepositoryExtend {
+    @PersistenceContext
+    EntityManager entityManager = null;
+
     Provider getProviderByCode(String code);
     Provider getProviderById(Long id);
 
@@ -37,6 +47,13 @@ public interface IProviderRepository extends JpaRepository<Provider, Long> {
             " limit 5 ", nativeQuery = true)
     List<INameBooks> getFiveBooksAreTopOrder(String name);
 
+    @Modifying
+    @Query(value="?1",nativeQuery = true)
+    void saveAllProviderByHQL(String stringQuery);
+
+//    @Modifying
+//    @Query(value=" ?1 ",nativeQuery = true)
+//    List<Provider> findProviderByCodesList(String stringQuery);
 
 
 

@@ -266,6 +266,102 @@ public class ProviderService implements IProviderService {
     }
 
 
+    public ResponseData saveAllByHQL(Provider[] providers) {
+        ResponseData responseData = new ResponseData();
+        try {
+            ExceptionGetData.checkDuplicateProvider(providers);
+            if(checkDuplicateData( providers)){
+                 String query= setInsertStatement(providers);
+                 providerRepository.saveAllProviderByHQL(query);
+
+                responseData.setData(providers);
+                responseData.setMessage("Save All");
+                responseData.setStatus("Success");
+                responseData.setCode("200");
+            }else{
+                responseData.setMessage("The Array has the object which is exist in Database");
+                responseData.setStatus("Fail");
+                responseData.setCode("100");
+            }
+
+
+        }
+        catch (ExceptionHandle e) {
+
+            responseData.setMessage(e.getMessage());
+            responseData.setStatus("ERROR");
+            responseData.setCode("400");
+        }
+        catch (Exception e) {
+            responseData.setMessage(e.getMessage());
+
+        }
+
+        return responseData;
+    }
+
+    @Override
+    public ResponseData getAllMultiCode(String[] codes) {
+        ResponseData responseData = new ResponseData();
+        String stringQuery=setQueryStatement(codes);
+        try {
+            List<Provider> providerList = providerRepository.findProviderByCodesList(stringQuery);
+            responseData.setData(providerList);
+            responseData.setMessage("FindAllByMultiCode");
+            responseData.setStatus("Success");
+            responseData.setCode("200");
+        }
+        catch (Exception e){
+            responseData.setMessage(e.getMessage());
+        }
+
+
+        return responseData;
+    }
+
+
+    private String setInsertStatement(Provider[]providers){
+        String stringQuery= " INSERT into PROVIDER (code, name) values ";
+        int length = providers.length;
+        String stringAppend = "";
+        for (int i = 0; i <length-1; i++) {
+            stringAppend += "('";
+            stringAppend += providers[i].getCode();
+            stringAppend += "' , '";
+            stringAppend += providers[i].getName();
+            stringAppend += "') , ";
+        }
+        stringAppend += "('";
+        stringAppend += providers[length-1].getCode();
+        stringAppend += "','";
+        stringAppend += providers[length-1].getName();
+        stringAppend += "' ) ";
+
+        stringQuery += stringAppend;
+
+       return stringQuery;
+    }
+    private String setQueryStatement(String[] codes){
+        String stringQuery= " SELECT * FROM  PROVIDER P WHERE ";
+        int length = codes.length;
+        String stringAppend = "";
+        for (int i = 0; i <length-1; i++) {
+            stringAppend += " P.code ='";
+
+            stringAppend += codes[i];
+            stringAppend += "' OR ";
+
+        }
+        stringAppend += "P.code = '";
+        stringAppend += codes[length-1];
+        stringAppend += "' ";
+
+
+        stringQuery += stringAppend;
+        System.out.println(stringQuery);
+
+        return stringQuery;
+    }
 
 
 }

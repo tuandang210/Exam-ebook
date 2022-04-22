@@ -46,6 +46,11 @@ public class Provider {
         this.name = name;
     }
 
+    public Provider(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
     public Provider() {
     }
 
