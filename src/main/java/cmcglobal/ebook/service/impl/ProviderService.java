@@ -3,19 +3,20 @@ package cmcglobal.ebook.service.impl;
 import cmcglobal.ebook.common.ResponseData;
 import cmcglobal.ebook.entity.Book;
 import cmcglobal.ebook.entity.Provider;
+import cmcglobal.ebook.exception.ExceptionGetData;
 import cmcglobal.ebook.exception.ExceptionHandle;
 import cmcglobal.ebook.exception.ExceptionResponse;
+import cmcglobal.ebook.model.response.dto.INameBooks;
 import cmcglobal.ebook.model.response.ProviderResponse;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.repository.IProviderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
-public class ProviderService implements IServiceAddGetConditions <Provider> {
+public class ProviderService implements IProviderService {
 
     @Autowired
 
@@ -64,7 +65,7 @@ public class ProviderService implements IServiceAddGetConditions <Provider> {
         if(provider!=null){
             ProviderResponse providerResponse = new ProviderResponse();
             int number= providerRepository.getQuantityOfBookByProvider(name);
-            List<?> books = providerRepository.getFiveBooksAreTopOrder(name);
+            List<INameBooks> books = providerRepository.getFiveBooksAreTopOrder(name);
 
 
             providerResponse.setCode(provider.getCode());
@@ -207,9 +208,9 @@ public class ProviderService implements IServiceAddGetConditions <Provider> {
 
 
     @Override
-    public ResponseData getAllByRequest(Provider inputElement) {
+    public ResponseData getAllProivderByConditions(Provider inputElement) {
         ResponseData responseData = new ResponseData();
-        List<?> providerList = providerRepository.getAllProviderByConditions(inputElement.getCode(), inputElement.getName());
+        List<Provider> providerList = providerRepository.getAllProviderByConditions(inputElement.getCode(), inputElement.getName());
         responseData.setData(providerList);
         responseData.setMessage("FindAllByConditions");
         responseData.setStatus("Success");
@@ -217,14 +218,54 @@ public class ProviderService implements IServiceAddGetConditions <Provider> {
         return responseData;
     }
 
+
+
+
     @Override
-    public ResponseData getAllResponseProvider(String[] codes) {
+    public ResponseData saveAll(Provider[] providers) {
         ResponseData responseData = new ResponseData();
-//        List<?> providerList = providerRepository.getAllResponseProvider(codes);
-//        responseData.setData(providerList);
-        responseData.setMessage("FindAllByConditions");
-        responseData.setStatus("Success");
-        responseData.setCode("200");
+        try {
+            ExceptionGetData.checkDuplicateProvider(providers);
+            if(checkDuplicateData( providers)){
+                List<Provider> providerList = new ArrayList<>(Arrays.asList(providers));
+                providerRepository.saveAll(providerList);
+                responseData.setData(providerList);
+                responseData.setMessage("Save All");
+                responseData.setStatus("Success");
+                responseData.setCode("200");
+            }else{
+                responseData.setMessage("The Array has the object which is exist in Database");
+                responseData.setStatus("Fail");
+                responseData.setCode("100");
+            }
+
+
+        }
+        catch (ExceptionHandle e) {
+
+            responseData.setMessage(e.getMessage());
+            responseData.setStatus("ERROR");
+            responseData.setCode("400");
+        }
+        catch (Exception e) {
+            responseData.setMessage(e.getMessage());
+
+        }
+
         return responseData;
     }
+    private boolean checkDuplicateData(Provider[] providers){
+        boolean check = true;
+        for(Provider provider : providers){
+            Provider provider1 = providerRepository.getProviderByCode(provider.getCode());
+            if(provider1!=null){
+                check=false;
+            }
+        }
+        return check;
+    }
+
+
+
+
 }
