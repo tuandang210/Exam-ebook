@@ -10,6 +10,8 @@ import cmcglobal.ebook.model.response.dto.INameBooks;
 import cmcglobal.ebook.model.response.ProviderResponse;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.repository.IProviderRepository;
+import cmcglobal.ebook.repository.impl.IProviderRepositoryExtend;
+import cmcglobal.ebook.repository.impl.ProviderRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,9 @@ public class ProviderService implements IProviderService {
     @Autowired
 
     IProviderRepository providerRepository;
+
+    @Autowired
+    IProviderRepositoryExtend providerRepositoryExtend;
 
     @Autowired
     IBookRepository bookRepository;
@@ -272,7 +277,7 @@ public class ProviderService implements IProviderService {
             ExceptionGetData.checkDuplicateProvider(providers);
             if(checkDuplicateData( providers)){
                  String query= setInsertStatement(providers);
-                 providerRepository.saveAllProviderByHQL(query);
+//                 providerRepository.sa(query);
 
                 responseData.setData(providers);
                 responseData.setMessage("Save All");
@@ -304,8 +309,15 @@ public class ProviderService implements IProviderService {
     public ResponseData getAllMultiCode(String[] codes) {
         ResponseData responseData = new ResponseData();
         String stringQuery=setQueryStatement(codes);
+
         try {
-            List<Provider> providerList = providerRepository.findProviderByCodesList(stringQuery);
+//            getAll by jpa repository
+//            List<Provider> providerList = providerRepository.findProviderByCodesList(stringQuery);
+//            List<Provider> providerList = providerRepository.findProviderByCodesList(codes);
+
+//             get All by hibernate repository extends
+            List<Provider> providerList =   providerRepositoryExtend.findProviderByCodesList(stringQuery);
+
             responseData.setData(providerList);
             responseData.setMessage("FindAllByMultiCode");
             responseData.setStatus("Success");
@@ -342,7 +354,7 @@ public class ProviderService implements IProviderService {
        return stringQuery;
     }
     private String setQueryStatement(String[] codes){
-        String stringQuery= " SELECT * FROM  PROVIDER P WHERE ";
+        String stringQuery= "Select P.code FROM  Provider P WHERE ";
         int length = codes.length;
         String stringAppend = "";
         for (int i = 0; i <length-1; i++) {
