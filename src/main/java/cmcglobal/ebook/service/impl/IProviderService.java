@@ -7,6 +7,6 @@ import cmcglobal.ebook.service.IService;
 public interface IProviderService extends IService<Provider> {
     ResponseData getAllProivderByConditions(Provider inputElement);
     ResponseData saveAll(Provider[] providers);
-    ResponseData saveAllByHQL(Provider[] providers);
+    ResponseData saveAllByHibernate(Provider[] providers);
     ResponseData getAllMultiCode(String[] codes);
 }

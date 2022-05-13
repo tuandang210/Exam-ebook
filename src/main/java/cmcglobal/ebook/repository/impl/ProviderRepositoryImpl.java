@@ -1,10 +1,6 @@
 package cmcglobal.ebook.repository.impl;
 
 
-
-
-
-
 import javax.persistence.*;
 
 import cmcglobal.ebook.entity.Provider;
@@ -24,29 +20,34 @@ import java.util.List;
 
 
 @Repository
-public class ProviderRepositoryImpl implements IProviderRepositoryExtend   {
+public class ProviderRepositoryImpl implements IProviderRepositoryExtend {
 
-//    @Autowired
+    //    @Autowired
 //     private SessionFactory sessionFactory;
     @Autowired
     EntityManager entityManager;
 
     @Override
     public List<Provider> findProviderByCodesList(String stringQuery) {
-       Session session = entityManager.unwrap(org.hibernate.Session.class);
+        Session session = entityManager.unwrap(org.hibernate.Session.class);
 
 //       Session session = sessionFactory.openSession();
 
         Transaction tx = null;
         String hql = stringQuery;
-        List<Provider> result=null;
+        List<Provider> result = null;
         try {
             tx = session.beginTransaction();
+
             Query query = session.createQuery(hql);
             result = query.getResultList();
+
+            Query query2 = session.createNativeQuery(hql);
+            result = query.getResultList();
+
             tx.commit();
         } catch (HibernateException e) {
-            if (tx!=null) tx.rollback();
+            if (tx != null) tx.rollback();
             e.printStackTrace();
         } finally {
             session.close();
@@ -55,25 +56,33 @@ public class ProviderRepositoryImpl implements IProviderRepositoryExtend   {
         return result;
     }
 
-//    @Autowired
-//    public void saveAllProviderByHQL2(String stringQuery) {
-//        Session session = factory.openSession();
-//        Transaction tx = null;
-//        String hql = "INSERT INTO Provider(code,name) VALUES ('NXB6' , 'Nhà xuất bản Khoa Học') , ('NXB7' , 'Nhà xuất bản Thành Công')";
-//
-//        try {
-//            tx = session.beginTransaction();
-//            Query query = session.createQuery(hql);
-//            int result = query.executeUpdate();
-//            tx.commit();
-//        } catch (HibernateException e) {
-//            if (tx!=null) tx.rollback();
-//            e.printStackTrace();
-//        } finally {
-//            session.close();
-//        }
-//
-//    }
+    @Override
+    public void saveAllProviderByHibernate(Provider[] providers) {
+        Session session = entityManager.unwrap(org.hibernate.Session.class);
+        Transaction tx = null;
+
+
+        try {
+            tx = session.beginTransaction();
+
+            for (int i = 0; i < providers.length; i++) {
+                session.save(providers[i]);
+
+                if (i % 100 == 0) {//a batch size for safety
+                    session.flush();
+                    session.clear();
+                }
+            }
+
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+    }
 
 
 }

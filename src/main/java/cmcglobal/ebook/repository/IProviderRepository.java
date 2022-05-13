@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
 
 @Repository
@@ -45,19 +46,6 @@ public interface IProviderRepository extends JpaRepository<Provider, Long> {
             " order by sum(od.quantity)  desc " +
             " limit 5 ", nativeQuery = true)
     List<INameBooks> getFiveBooksAreTopOrder(String name);
-
-//    @Modifying
-//    @Query(value="?1",nativeQuery = true)
-//    void saveAllProviderByHQL(String stringQuery);
-
-
-//    @Modifying
-//    @Query(value=" ?1 ",nativeQuery = true)
-//    List<Provider> findProviderByCodesList(String stringQuery);
-
-//    @Modifying
-//    @Query(value=" SELECT pro.code FROM Provider pro WHERE exists ?1",nativeQuery = true)
-//    List<Provider> findProviderByCodesList(String[] codes);
 
 
 

@@ -71,9 +71,9 @@ public class ProviderController {
         return providerService.saveAll(provider);
     }
 
-    @PostMapping(value="/saveAllByHQL")
+    @PostMapping(value="/saveAllByHibernate")
     public ResponseData addAllProviderByHQL(@RequestBody Provider[] provider) throws ExceptionHandle {
-        return providerService.saveAllByHQL(provider);
+        return providerService.saveAllByHibernate(provider);
     }
 
     @GetMapping(value="/getMultiCode")

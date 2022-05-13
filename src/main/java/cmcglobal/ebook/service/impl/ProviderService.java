@@ -11,7 +11,6 @@ import cmcglobal.ebook.model.response.ProviderResponse;
 import cmcglobal.ebook.repository.IBookRepository;
 import cmcglobal.ebook.repository.IProviderRepository;
 import cmcglobal.ebook.repository.impl.IProviderRepositoryExtend;
-import cmcglobal.ebook.repository.impl.ProviderRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -271,13 +270,12 @@ public class ProviderService implements IProviderService {
     }
 
 
-    public ResponseData saveAllByHQL(Provider[] providers) {
+    public ResponseData saveAllByHibernate(Provider[] providers) {
         ResponseData responseData = new ResponseData();
         try {
             ExceptionGetData.checkDuplicateProvider(providers);
             if(checkDuplicateData( providers)){
-                 String query= setInsertStatement(providers);
-//                 providerRepository.sa(query);
+                providerRepositoryExtend.saveAllProviderByHibernate(providers);
 
                 responseData.setData(providers);
                 responseData.setMessage("Save All");
@@ -311,11 +309,10 @@ public class ProviderService implements IProviderService {
         String stringQuery=setQueryStatement(codes);
 
         try {
-//            getAll by jpa repository
-//            List<Provider> providerList = providerRepository.findProviderByCodesList(stringQuery);
-//            List<Provider> providerList = providerRepository.findProviderByCodesList(codes);
 
-//             get All by hibernate repository extends
+
+
+//           get All by hibernate repository extends
             List<Provider> providerList =   providerRepositoryExtend.findProviderByCodesList(stringQuery);
 
             responseData.setData(providerList);
@@ -332,27 +329,7 @@ public class ProviderService implements IProviderService {
     }
 
 
-    private String setInsertStatement(Provider[]providers){
-        String stringQuery= " INSERT into PROVIDER (code, name) values ";
-        int length = providers.length;
-        String stringAppend = "";
-        for (int i = 0; i <length-1; i++) {
-            stringAppend += "('";
-            stringAppend += providers[i].getCode();
-            stringAppend += "' , '";
-            stringAppend += providers[i].getName();
-            stringAppend += "') , ";
-        }
-        stringAppend += "('";
-        stringAppend += providers[length-1].getCode();
-        stringAppend += "','";
-        stringAppend += providers[length-1].getName();
-        stringAppend += "' ) ";
 
-        stringQuery += stringAppend;
-
-       return stringQuery;
-    }
     private String setQueryStatement(String[] codes){
         String stringQuery= "Select P.code FROM  Provider P WHERE ";
         int length = codes.length;
@@ -374,6 +351,7 @@ public class ProviderService implements IProviderService {
 
         return stringQuery;
     }
+
 
 
 }
